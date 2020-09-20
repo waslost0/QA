@@ -1,0 +1,6 @@
+REGULAR_TRIANGLE = 'Regular triangle'
+ISOSCELES_TRIANGLE = 'Isosceles triangle'
+EQUILATERAL_TRIANGLE = 'Equilateral triangle'
+NOT_TRIANGLE = 'Not triangle'
+UNKNOWN_ERROR = 'Unknown error'
+ERROR_ARGUMENTS = 'Excpected 3 arguments'
