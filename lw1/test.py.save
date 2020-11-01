@@ -1,0 +1,45 @@
+from argparse import ArgumentParser
+from subprocess import check_output
+
+
+def parse_command_line_arguments():
+    parser = ArgumentParser()
+    parser.add_argument("target_file_name", type=str)
+    parser.add_argument("test_cases_file_name", type=str)
+
+    args = parser.parse_args()
+    return args.target_file_name, args.test_cases_file_name
+
+
+def get_formatted_comparison_result(result, line_index,):
+    return f'Test case[{line_index}]: {"Success" if result else "Failed"}'
+
+
+def main():
+    target_file_name, test_cases_file_name = parse_command_line_arguments()
+    total_success = 0
+    total_fail = 0
+
+    with open(test_cases_file_name, "r") as test_cases_file:
+        lines = [line.rstrip() for line in test_cases_file]
+        lines = list(map(lambda arguments: arguments.split(':'), lines))
+        command_line_arguments = [line[0].split() for line in lines]
+        expected_outputs = [line[1] for line in lines]
+
+        for i, (args, expected_output) in enumerate(zip(command_line_arguments, expected_outputs)):
+            output = check_output(
+                ['py', _target_file_name] + args,
+                universal_newlines=True).strip()
+
+            condition_result = output == expected_output
+            if condition_result:
+                total_success = total_success + 1
+            else:
+                total_fail = total_fail + 1
+
+            print(f'{get_formatted_comparison_result(condition_result, i + 1)}\nExpected_output:{expected_output}\nOutput:{output}\n')
+        print(f'Total Success:{total_success}\nTotal Fail:{total_fail}')
+
+
+if __name__ == "__main__":
+    main()
